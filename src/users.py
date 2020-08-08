@@ -2,6 +2,7 @@
 """
 import pickle
 import hashlib
+from src.quiz import generate_random_backround_list
 SECRET_SALT = b'HI SATNAM!'
 def load_user_list(filepath:str):
     try:
@@ -10,7 +11,6 @@ def load_user_list(filepath:str):
         return users
     except FileNotFoundError:
         return []
-
 
 def write_users_to_file(filepath:str, users):
     with open(filepath, 'wb+') as f:
@@ -27,7 +27,7 @@ def authenticate_user(username, passkey, user_list):
     for x in user_list:
         if(x.name == username):
             if(x.authenticate_user(passkey)):
-                return True
+                return x
             else:
                 return False
     raise KeyError("User not found")
@@ -41,8 +41,7 @@ class User:
         hasher.update(passphrase.encode('ascii'))
         hasher.update(SECRET_SALT)
         self.hashed_pass =  hasher.digest()
-        self._test_index = 0
-        
+        self.colour_list = generate_random_backround_list()
     def authenticate_user(self, passkey:str):
         hasher = hashlib.sha256()
         hasher.update(passkey.encode('ascii'))
@@ -52,6 +51,7 @@ class User:
         else:
             return False
     def get_user_bg_colour(self):
-        pass
+        return self.colour_list.pop()
+
 
 
