@@ -12,7 +12,16 @@ def add_user_to_list(user:users.User):
         user_list.append(user)
         users.write_users_to_file(filepath,user_list)
         return True
-
+def auth_user_from_data_base(username:str, passkey:str):
+    filepath = os.getcwd() + '\\data\\user.pickle'
+    user_list = users.load_user_list(filepath)
+    if users.check_if_user_exists(username, user_list):
+        if (users.authenticate_user(username, passkey, user_list)):
+            return True
+        else:
+            return False
+    else:
+        return False
 class GUI:
     def __init__(self):
 
@@ -23,7 +32,7 @@ class GUI:
         ]
 
         self.login_layout = [[sg.Text("Login Page")],
-                            [sg.Text(' '*80, key = 'LOGIN_INFO_')], 
+                            [sg.Text(' '*80, key = '_LOGIN_INFO_')], 
                             [sg.Text("Username"), sg.InputText(key='_USERNAME_')],
                             [sg.Text("Password"), sg.InputText(key='_PASSKEY_', password_char='*')],
                             [sg.Button("Login", key='_LOGIN_')]]
@@ -53,7 +62,10 @@ class GUI:
             if(event == '_LOGIN_'):
                 username = values['_USERNAME_']
                 passkey= values['_PASSKEY_']
-                # TODO Auth user here
+                if auth_user_from_data_base(username, passkey):
+                    self.quiz(username)
+                else:
+                    self.window['_LOGIN_INFO_'].update("Password mismatch! OR User does not exist")
             if event == '_CREATE_USER_':
                 if(values['_PASSKEY_1_'] != values['_PASSKEY_2_']):
                     self.window['_SIGNUP_INFO_'].update("Password mismatch!")

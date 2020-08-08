@@ -45,7 +45,7 @@ class User:
         
     def authenticate_user(self, passkey:str):
         hasher = hashlib.sha256()
-        hasher.update(passkey.encode('ASCII'))
+        hasher.update(passkey.encode('ascii'))
         hasher.update(SECRET_SALT)
         if (self.hashed_pass == hasher.digest()):
             return True
