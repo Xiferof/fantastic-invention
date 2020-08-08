@@ -4,13 +4,18 @@ import pickle
 import hashlib
 SECRET_SALT = b'HI SATNAM!'
 def load_user_list(filepath:str):
-    with open(filepath, 'r') as f:
-        users = pickle.load(f)
-    return users
+    try:
+        with open(filepath, 'rb') as f:
+            users = pickle.load(f)
+        return users
+    except FileNotFoundError:
+        return []
+
 
 def write_users_to_file(filepath:str, users):
-    with open(filepath, 'w') as f:
-        pickle.dump(users, filepath)
+    with open(filepath, 'wb+') as f:
+        pickle.dump(users, f)
+
 
 def check_if_user_exists(username, user_list):
     for x in user_list:
@@ -37,6 +42,7 @@ class User:
         hasher.update(SECRET_SALT)
         self.hashed_pass =  hasher.digest()
         self._test_index = 0
+        
     def authenticate_user(self, passkey:str):
         hasher = hashlib.sha256()
         hasher.update(passkey.encode('ASCII'))

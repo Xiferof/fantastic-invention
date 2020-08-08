@@ -22,6 +22,10 @@ class TestUserMethods(unittest.TestCase):
         user_list = []
         user_list.append(users.User('Test','Correct'))
         retval = users.authenticate_user('Test','Incorrect', user_list)
-        self.assertFalse(retval)  
+        self.assertFalse(retval)
+    def test_login_auth_for_no_user_raises(self):
+        with self.assertRaises(KeyError):
+            users.authenticate_user('Test','Incorrect', [])
+
 if __name__ == "__main__":
     unittest.main()
