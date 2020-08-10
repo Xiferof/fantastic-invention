@@ -1,5 +1,5 @@
-import gui
+import src.gui
 
 
-GUI_HANDLER = gui.GUI()
+GUI_HANDLER = src.gui.GUI()
 GUI_HANDLER.start_gui()
